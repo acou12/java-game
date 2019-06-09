@@ -1,5 +1,7 @@
 package com;
 
+import java.util.ArrayList;
+
 import processing.core.PApplet;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
@@ -10,6 +12,8 @@ public class MainClass extends PApplet{
 	public static final int GRAVITY = 1;
 	public static final int JUMP_HEIGHT = 25;
 	
+	ArrayList<Block> blocks = new ArrayList<Block>();
+	
 	Player p = new Player();
 
 	boolean wPressed = false;
@@ -19,7 +23,7 @@ public class MainClass extends PApplet{
 	
     @Override
     public void settings() {
-        fullScreen();
+        size(1080, 720);
     }
 
     @Override
@@ -30,9 +34,21 @@ public class MainClass extends PApplet{
     	p.yv = 0;
     }
     
+    int oldX;
+    int oldY;
+    
     @Override
     public void draw() {
     	background(0);
+    	
+    	for (Block b : blocks) {
+    		fill(255);
+    		rect(b.x, b.y, Block.BLOCK_SIZE, Block.BLOCK_SIZE);
+    	}
+    	
+    	oldX = p.x;
+    	oldY = p.y;
+    	
     	if (aPressed) {
     		p.x -= WALK_SPEED;
     	}
@@ -46,12 +62,35 @@ public class MainClass extends PApplet{
     		p.yv = 0;
     		p.canJump = true;
     	}
-    	rect(p.x, p.y - 50, 50, 50);
+    	
+    	for (Block b : blocks) {
+    		if (b.isInside(p.x, p.y)) {
+    			Direction d = b.getDirection(oldX, oldY);
+    			if (d == Direction.LEFT) {
+    				p.x = b.x-1;
+    				p.xv = 0;
+    			} else if (d == Direction.RIGHT) {
+    				p.x = b.x + Block.BLOCK_SIZE;
+    				p.xv = 0;
+    			} else if (d == Direction.TOP) {
+    				p.y = b.y-1;
+    				p.yv = 0;
+    				p.canJump = true;
+    			} else if (d == Direction.BOTTOM) {
+    				p.y = b.y + Block.BLOCK_SIZE;
+    				p.yv = 0;
+    			}
+    		}
+    	}
+    	
+    	rect(p.x - 25, p.y - 50, 50, 50);
     }
     
     @Override
     public void mouseClicked(MouseEvent event) {
-    	
+    	if (event.getButton() == RIGHT) {
+    		blocks.add(new Block(mouseX, mouseY));
+    	}
     }
     
     @Override
