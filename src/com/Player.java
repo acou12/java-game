@@ -3,5 +3,7 @@ package com;
 public class Player {
 	int x;
 	int y;
-	int speed = 5;
+	int xv;
+	int yv;
+	public boolean canJump = false;
 }

@@ -6,6 +6,10 @@ import processing.event.MouseEvent;
 
 public class MainClass extends PApplet{
 
+	public static final int WALK_SPEED = 15;
+	public static final int GRAVITY = 1;
+	public static final int JUMP_HEIGHT = 25;
+	
 	Player p = new Player();
 
 	boolean wPressed = false;
@@ -22,24 +26,27 @@ public class MainClass extends PApplet{
     public void setup() {
     	p.x = 0;
     	p.y = 0;
+    	p.xv = 0;
+    	p.yv = 0;
     }
     
     @Override
     public void draw() {
     	background(0);
-    	if (wPressed) {
-    		p.y-=p.speed;
-    	}
     	if (aPressed) {
-    		p.x-=p.speed;
-    	}
-    	if (sPressed) {
-    		p.y+=p.speed;
+    		p.x -= WALK_SPEED;
     	}
     	if (dPressed) {
-    		p.x+=p.speed;
+    		p.x += WALK_SPEED;
     	}
-    	rect(p.x, p.y, 50, 50);
+    	p.yv -= GRAVITY;
+    	p.y -= p.yv;
+    	if (p.y > height) {
+    		p.y = height;
+    		p.yv = 0;
+    		p.canJump = true;
+    	}
+    	rect(p.x, p.y - 50, 50, 50);
     }
     
     @Override
@@ -52,6 +59,12 @@ public class MainClass extends PApplet{
     	switch (event.getKey()) {
     		case 'w': {
     			wPressed = true;
+    			
+    			if (p.canJump) {
+    				p.canJump = false;
+    				p.yv = JUMP_HEIGHT;
+    			}
+    			
     			break;
     		}
     		case 'a': {
