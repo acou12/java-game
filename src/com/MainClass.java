@@ -20,6 +20,7 @@ public class MainClass extends PApplet{
 	boolean aPressed = false;
 	boolean sPressed = false;
 	boolean dPressed = false;
+	boolean shPressed = false;
 	
     @Override
     public void settings() {
@@ -49,11 +50,13 @@ public class MainClass extends PApplet{
     	oldX = p.x;
     	oldY = p.y;
     	
+    	double c = shPressed ? 0.3 : 1.0;
+    	
     	if (aPressed) {
-    		p.x -= WALK_SPEED;
+    		p.x -= WALK_SPEED * c;
     	}
     	if (dPressed) {
-    		p.x += WALK_SPEED;
+    		p.x += WALK_SPEED * c;
     	}
     	p.yv -= GRAVITY;
     	p.y -= p.yv;
@@ -96,6 +99,7 @@ public class MainClass extends PApplet{
     @Override
     public void keyPressed(KeyEvent event) {
     	switch (event.getKey()) {
+    		case 'W':
     		case 'w': {
     			wPressed = true;
     			
@@ -106,40 +110,53 @@ public class MainClass extends PApplet{
     			
     			break;
     		}
+    		case 'A':
     		case 'a': {
     			aPressed = true;
     			break;
     		}
+    		case 'S':
     		case 's': {
     			sPressed = true;
     			break;
     		}
+    		case 'D':
     		case 'd': {
     			dPressed = true;
     			break;
     		}
+    	}
+    	if (keyCode == SHIFT) {
+    		shPressed = true;
     	}
     }
     
     @Override
     public void keyReleased(KeyEvent event) {
     	switch (event.getKey()) {
+    		case 'W':
     		case 'w': {
     			wPressed = false;
     			break;
     		}
+    		case 'A':
     		case 'a': {
     			aPressed = false;
     			break;
     		}
+    		case 'S':
     		case 's': {
     			sPressed = false;
     			break;
     		}
+    		case 'D':
     		case 'd': {
     			dPressed = false;
     			break;
     		}
+    	}
+    	if (keyCode == SHIFT) {
+    		shPressed = false;
     	}
     }
 
